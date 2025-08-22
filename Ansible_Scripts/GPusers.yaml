@@ -1,0 +1,20 @@
+---
+- name: Get GlobalProtect connected users
+  hosts: GPGateways
+  connection: httpapi
+
+  collections:
+    - paloaltonetworks.panos
+
+  tasks:
+    - name: Run GP user command
+      panos_op:
+        provider:
+          ip_address: "{{ ansible_host }}"
+          api_key: "{{ panos_api_key }}"
+        cmd: "show global-protect-gateway statistics"
+      register: gp_users
+
+    - name: Display GP users
+      debug:
+        var: gp_users.stdout
